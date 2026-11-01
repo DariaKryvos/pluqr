@@ -1,0 +1,8 @@
+import ProductCollection from './ProductCollection';
+import BrandLogo from './BrandLogo';
+import { site } from '../lib/seo/site';
+import { ingredients } from '../data/ingredients';
+import type { PageInfo, ShopifyProduct } from '../lib/shopify/types';
+export default function EditorialSection({initialCatalog}:{initialCatalog?:{products:ShopifyProduct[];pageInfo:PageInfo}}) {
+ return <div className="editorial-panel"><ProductCollection initialCatalog={initialCatalog}/><section className="full-ingredients" id="ingredienten" lang="nl" aria-labelledby="ingredients-title"><div><p className="scene-eyebrow">Volledig overzicht</p><h2 id="ingredients-title">Onze ingrediënten.</h2></div><p>{ingredients.map((ingredient,index)=><span key={ingredient}>{index>0?', ':''}{ingredient.includes('lupine')?<strong>{ingredient}</strong>:ingredient}{index===ingredients.length-1?'.':''}</span>)}</p></section><div className="tradition-note" id="our-story"><span>01 / The enduring original</span><p>Warm moments. Shared pleasures.<br/>A little taste of Dutch tradition.</p></div><section className="business-details" aria-label="Contact PLUQR"><div><h2>PLUQR</h2><address>{site.street}<br/>{site.postcode} {site.city}</address><p>KVK: {site.kvk}</p></div><div><h3>Neem contact op</h3><a href={`tel:${site.telephone}`}>085 – 301 5920</a><a href={`mailto:${site.email}`}>{site.email}</a><a href="https://wa.me/31853015920">WhatsApp ↗</a></div></section><footer className="cinema-footer"><BrandLogo className="brand-logo-footer"/><span>A simple pleasure, beautifully made.</span><a href="#experience">Back to the experience ↑</a></footer></div>;
+}

@@ -1,0 +1,1 @@
+export default function FinaleTypography() {return <div className="finale" aria-label="It’s what’s inside that counts."><p className="finale-first">It’s what’s</p><p className="finale-second"><em>Inside</em> that counts.</p></div>;}
