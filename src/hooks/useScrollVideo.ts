@@ -12,19 +12,27 @@ export function useScrollVideo(root: RefObject<HTMLElement | null>, video: RefOb
     if (!element || !media) return;
     let duration = 0;
     let desiredTime = 0;
+    let progress=0;
     let scope: gsap.MatchMedia | undefined;
+    let active=true;
+    let activating=false;
+    let activated=false;
+    let refreshFrame=0;
+    let refreshed=false;
     const seek = () => {
-      if (!media.seeking && Math.abs(media.currentTime - desiredTime) > .025) media.currentTime = desiredTime;
+      if(!active||!duration||media.readyState<1||media.seeking)return;
+      if(Math.abs(media.currentTime-desiredTime)>.025){try{media.currentTime=desiredTime;}catch{/* Retry when the first video frame is available. */}}
+
     };
     const initialize = () => {
-      if (!Number.isFinite(media.duration) || media.duration <= 0 || scope) return;
-      duration = Math.max(0, media.duration - .05);
+      if(Number.isFinite(media.duration)&&media.duration>0)duration=Math.max(0,media.duration-.05);
+      if(scope){desiredTime=progress*duration;seek();return;}
       scope = gsap.matchMedia();
       scope.add('(prefers-reduced-motion: no-preference)', () => {
         const q = gsap.utils.selector(element);
         const clock = { time: 0 };
         const timeline = gsap.timeline({scrollTrigger: {id: 'pluqr-story', trigger: element, start: () => `top top+=${parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--site-header-height'))||0}`, end: '+=400%', pin: true, scrub: .3, invalidateOnRefresh: true}});
-        timeline.to(clock, { time: duration, duration: .56, ease: 'none', onUpdate: () => { desiredTime = clock.time; seek(); } }, .15);
+        timeline.to(clock, { time: 1, duration: .56, ease: 'none', onUpdate: () => { progress=clock.time; desiredTime = progress*duration; seek(); } }, .15);
         timeline.to(q('.product-promises'), { autoAlpha: 0, y: -10, duration: .08 }, .12);
         timeline.to(q('.scene-hero'), { yPercent: -35, opacity: 0, duration: .18 }, .02);
         timeline.to(q('.product-stage'), {scale:1.07,top:'50%',duration:.3}, .1);
@@ -44,15 +52,45 @@ export function useScrollVideo(root: RefObject<HTMLElement | null>, video: RefOb
         };
       });
     };
-    const ready = () => setStatus('ready');
+    const ready = () => {
+      initialize();seek();setStatus('ready');
+      if(!refreshed){refreshed=true;refreshFrame=requestAnimationFrame(()=>{if(active)ScrollTrigger.refresh();});}
+    };
+    // iOS can postpone video decoding until the first real interaction.
+    // Prime the muted inline decoder, then keep playback controlled by scrolling.
+    const activate = () => {
+      if(activated||activating||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      activating=true;media.muted=true;media.playsInline=true;
+      void media.play().then(()=>{
+        if(!active){media.pause();return;}
+        media.pause();activated=true;seek();
+        window.removeEventListener('touchstart',activate);
+        window.removeEventListener('pointerdown',activate);
+        window.removeEventListener('touchend',activate);
+        window.removeEventListener('click',activate);
+      }).catch(()=>{/* A later gesture can retry if mobile playback was blocked. */}).finally(()=>{activating=false;});
+    };
     const error = () => setStatus('error');
+    window.addEventListener('touchstart',activate,{passive:true});
+    window.addEventListener('pointerdown',activate,{passive:true});
+    window.addEventListener('touchend',activate,{passive:true});
+    window.addEventListener('click',activate,{passive:true});
+    media.addEventListener('durationchange',initialize);
+    media.addEventListener('canplay',ready);
     media.addEventListener('loadedmetadata', initialize);
     media.addEventListener('loadeddata', ready);
     media.addEventListener('seeked', seek);
     media.addEventListener('error', error);
-    if (media.readyState >= 1) initialize();
+    initialize();
     if (media.readyState >= 2) ready();
     return () => {
+      active=false;cancelAnimationFrame(refreshFrame);
+      window.removeEventListener('touchstart',activate);
+      window.removeEventListener('pointerdown',activate);
+      window.removeEventListener('touchend',activate);
+      window.removeEventListener('click',activate);
+      media.removeEventListener('durationchange',initialize);
+      media.removeEventListener('canplay',ready);
       scope?.revert();
       media.removeEventListener('loadedmetadata', initialize);
       media.removeEventListener('loadeddata', ready);
