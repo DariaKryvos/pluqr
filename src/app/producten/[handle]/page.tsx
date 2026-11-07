@@ -1,3 +1,5 @@
+import BrandLogo from '../../../components/BrandLogo';
+import SocialLinks from '../../../components/SocialLinks';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
@@ -23,5 +25,5 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 export default async function ProductPage({params}:Props){
  const {handle}=await params;const product=await readProduct(handle);if(!product)notFound();
  let related;try{related=(await getProducts(12)).products;}catch{related=[product];}
- return <CartProvider><JsonLd data={productSchema(product)}/><div className="opening-header"><DeliveryChecker/><Navbar/></div><main className="product-page"><Link href="/#producten" className="product-page-back">← Alle oliebollen</Link><ProductPageView key={product.id} initialProduct={product} related={related}/><footer className="product-page-footer"><Link href="/">PLUQR</Link><span>Vegan. Glutenvrij. Vers gebakken.</span></footer></main></CartProvider>;
+ return <CartProvider><JsonLd data={productSchema(product)}/><div className="opening-header product-page-header"><DeliveryChecker/><Navbar/></div><main className="product-page"><Link href="/#producten" className="product-page-back">← Alle oliebollen</Link><ProductPageView key={product.id} initialProduct={product} related={related}/><footer className="site-footer product-page-site-footer"><SocialLinks/><div className="cinema-footer"><BrandLogo className="brand-logo-footer brand-logo-inverse"/><span>Vegan. Glutenvrij. Vers gebakken.</span><Link href="/#producten">Alle oliebollen ↗</Link></div><p className="site-credit">Made by Megokruto Tech</p></footer></main></CartProvider>;
 }

@@ -18,3 +18,6 @@ export const ingredientCallouts = [
   ['Appel & kaneel', 'Appel, gemalen kaneel en biologische zonnebloemolie.'],
   ['Plantaardig eiwit', 'Lupine, plantaardige vezels en psylliumvezel.'],
 ];
+
+// Full label supplied by the store owner; the visual grid highlights the base ingredients.
+export const fullIngredients=[...ingredients,'calcium','vitaminen (B12, D)'];

@@ -3,7 +3,7 @@ import { getProducts } from '../lib/shopify/catalog';
 import { absoluteUrl, productPath } from '../lib/seo/site';
 export const dynamic='force-dynamic';
 export default async function sitemap():Promise<MetadataRoute.Sitemap>{
- const entries:MetadataRoute.Sitemap=[{url:absoluteUrl(),changeFrequency:'daily',priority:1}];
+ const entries:MetadataRoute.Sitemap=[{url:absoluteUrl(),changeFrequency:'daily',priority:1},{url:absoluteUrl('/over-pluqr'),changeFrequency:'monthly',priority:.7}];
  let cursor:string|null=null;
  do {
   const data=await getProducts(50,cursor);

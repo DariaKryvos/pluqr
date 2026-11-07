@@ -1,0 +1,19 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ChefHat, Sprout, Truck, Heart, ArrowRight } from 'lucide-react';
+import CartProvider from '../../components/CartProvider';
+import Navbar from '../../components/Navbar';
+import DeliveryChecker from '../../components/DeliveryChecker';
+import SocialLinks from '../../components/SocialLinks';
+import BrandLogo from '../../components/BrandLogo';
+import JsonLd from '../../components/JsonLd';
+import { absoluteUrl,site } from '../../lib/seo/site';
+const description='Maak kennis met PLUQR: verse glutenvrije en vegan oliebollen, een eigen recept en een Hollandse traditie om samen van te genieten.';
+export const metadata:Metadata={title:'Over PLUQR',description,alternates:{canonical:'/over-pluqr'},openGraph:{type:'website',locale:'nl_NL',siteName:site.name,title:'Over PLUQR',description,url:absoluteUrl('/over-pluqr'),images:[{url:absoluteUrl('/images/packs/family-original.webp'),alt:'Verse oliebollen van PLUQR'}]},twitter:{card:'summary_large_image',title:'Over PLUQR',description,images:[absoluteUrl('/images/packs/family-original.webp')]}};
+const values=[
+ {icon:ChefHat,title:'Eigen receptuur',text:'Een eigen recept, met zorgvuldig geselecteerde ingrediënten van een leverancier die uitsluitend glutenvrije en/of veganistisch gecertificeerde producten verkoopt.'},
+ {icon:Sprout,title:'De beste ingrediënten',text:'De natuurlijke smaak van onze ingrediënten staat voorop. Zo ontstaat die vertrouwde, volle oliebollensmaak, zonder extra zoetstoffen.'},
+ {icon:Truck,title:'Altijd dagvers',text:'We bakken op de dag van bezorging. Zo geniet jij thuis van verse, ambachtelijke oliebollen.'},
+ {icon:Heart,title:'Samen genieten',text:'Vegan, glutenvrij of gewoon dol op oliebollen? Bij PLUQR geniet iedereen mee van dezelfde schaal.'},
+];
+export default function AboutPage(){return <CartProvider><JsonLd data={{'@context':'https://schema.org','@type':'AboutPage','@id':absoluteUrl('/over-pluqr#page'),url:absoluteUrl('/over-pluqr'),name:'Over PLUQR',description,inLanguage:'nl-NL',about:{'@id':absoluteUrl('/#bakery')}}}/><div className="opening-header product-page-header"><DeliveryChecker/><Navbar/></div><main className="about-page"><header className="about-hero"><div><p className="scene-eyebrow">Wij zijn PLUQR</p><h1>Alle smaak.<br/>Iedereen geniet mee.</h1><p>Verse oliebollen, glutenvrij en vegan.<br/>Een vertrouwde traditie, voor iedereen.</p><Link className="about-order-link" href="/#producten">Ontdek onze oliebollen <ArrowRight size={17} aria-hidden="true"/></Link></div><img src="/images/packs/family-original.webp" alt="Een schaal goudbruine PLUQR oliebollen met poedersuiker" width={1280} height={1280}/></header><section className="about-story" aria-labelledby="about-story-title"><h2 id="about-story-title">Genieten zonder zorgen.</h2><div><p>Bij PLUQR draait het om ambacht, vertrouwen en gezelligheid. We maken verse glutenvrije en vegan oliebollen, met alle smaak die bij deze Hollandse traditie hoort.</p><p>Elke oliebol bereiden we met zorg en aandacht. We werken in een schone omgeving, met strikte werkwijzen om kruisbesmetting te voorkomen, en kiezen onze ingrediënten zorgvuldig.</p><p>Onze missie? De oliebol toegankelijk maken voor mensen die glutenvrij en/of vegan leven. Zodat niemand iets hoeft te missen.</p></div></section><section className="about-values" aria-label="Waar PLUQR voor staat">{values.map(({icon:Icon,title,text})=><article key={title}><Icon size={26} strokeWidth={1.3} aria-hidden="true"/><h2>{title}</h2><p>{text}</p></article>)}</section><footer className="site-footer"><SocialLinks/><div className="cinema-footer"><BrandLogo className="brand-logo-footer brand-logo-inverse"/><Link href="/#producten">Bestel oliebollen ↗</Link></div><p className="site-credit">Made by Megokruto Tech</p></footer></main></CartProvider>;}

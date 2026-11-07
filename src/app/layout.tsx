@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { absoluteUrl, allowIndexing, site } from '../lib/seo/site';
 import '../styles/globals.css';
+import '../styles/storefront.css';
 export const metadata: Metadata = {
   metadataBase:new URL(absoluteUrl()),
   title:{default:site.title,template:'%s | PLUQR'},description:site.description,
@@ -12,5 +13,5 @@ export const metadata: Metadata = {
   twitter:{card:'summary_large_image',title:site.title,description:site.description,images:[{url:'/pluqr-social.jpg',alt:'Verse oliebollen van PLUQR'}]},
   formatDetection:{telephone:false},
 };
-export const viewport: Viewport = {themeColor:'#092B22'};
+export const viewport: Viewport = {themeColor:'#153f20'};
 export default function RootLayout({children}:{children:ReactNode}) { return <html lang="nl"><body>{children}</body></html>; }

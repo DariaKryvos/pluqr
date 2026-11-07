@@ -7,6 +7,8 @@ export interface ShopifyVariant {
   price: Money;
 }
 export interface ShopifyProduct {
+  packCount?: number;
+  packCountMetafield?: {value:string}|null;
   id: string; handle: string; title: string; description: string; availableForSale: boolean;
   featuredImage: ShopifyImage | null;
   options: { name: string; values: string[] }[];
@@ -14,8 +16,9 @@ export interface ShopifyProduct {
   variants: { nodes: ShopifyVariant[]; pageInfo: PageInfo };
 }
 export interface CartLine {
+  attributes?: {key:string;value:string}[];
   id: string; quantity: number; cost: { totalAmount: Money };
-  merchandise: ShopifyVariant & { product: { id: string; title: string; handle: string; featuredImage: ShopifyImage | null } };
+  merchandise: ShopifyVariant & { product: { id: string; title: string; handle: string; packCountMetafield?: {value:string}|null; featuredImage: ShopifyImage | null } };
 }
 export interface ShopifyCart {
   id: string; totalQuantity: number;

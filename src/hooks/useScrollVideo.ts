@@ -23,29 +23,20 @@ export function useScrollVideo(root: RefObject<HTMLElement | null>, video: RefOb
       scope.add('(prefers-reduced-motion: no-preference)', () => {
         const q = gsap.utils.selector(element);
         const clock = { time: 0 };
-        const timeline = gsap.timeline({scrollTrigger: {id: 'pluqr-story', trigger: element, start: 'top top', end: '+=400%', pin: true, scrub: .3, invalidateOnRefresh: true}});
-        timeline.to(clock, { time: duration, duration: .5, ease: 'none', onUpdate: () => { desiredTime = clock.time; seek(); } }, .15);
+        const timeline = gsap.timeline({scrollTrigger: {id: 'pluqr-story', trigger: element, start: () => `top top+=${parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--site-header-height'))||0}`, end: '+=400%', pin: true, scrub: .3, invalidateOnRefresh: true}});
+        timeline.to(clock, { time: duration, duration: .56, ease: 'none', onUpdate: () => { desiredTime = clock.time; seek(); } }, .15);
         timeline.to(q('.product-promises'), { autoAlpha: 0, y: -10, duration: .08 }, .12);
         timeline.to(q('.scene-hero'), { yPercent: -35, opacity: 0, duration: .18 }, .02);
-        timeline.to(q('.product-stage'), { scale: 1.07, duration: .3 }, .1);
+        timeline.to(q('.product-stage'), {scale:1.07,top:'50%',duration:.3}, .1);
         timeline.fromTo(q('.slice-copy'), {autoAlpha:0,y:25}, {autoAlpha:1,y:0,duration:.09}, .18);
         timeline.fromTo(q('.slice-line'), {scaleX:0}, {scaleX:1,duration:.12}, .2);
-        timeline.to(q('.slice-copy'), {autoAlpha:0,y:-15,duration:.08}, .51);
-        timeline.to(q('.counter-first'), {autoAlpha:0,y:-12,duration:.05}, .15);
-        timeline.fromTo(q('.counter-second'), {autoAlpha:0,y:12}, {autoAlpha:1,y:0,duration:.05}, .15);
-        timeline.to(q('.counter-second'), {autoAlpha:0,duration:.04}, .64);
-        timeline.fromTo(q('.counter-third'), {autoAlpha:0}, {autoAlpha:1,duration:.04}, .64);
-        timeline.to(q('.product-stage'), { scale: .88, duration: .07 }, .63);
-        timeline.fromTo(q('.ingredient-intro'), {autoAlpha:0,y:12}, {autoAlpha:1,y:0,duration:.04}, .63);
-        timeline.fromTo(q('.ingredient'), {autoAlpha:0,y:14}, {autoAlpha:1,y:0,stagger:.015,duration:.035}, .65);
-        timeline.fromTo(q('.ingredient-line'), {scaleX:0}, {scaleX:1,stagger:.015,duration:.04}, .65);
+        timeline.to(q('.slice-copy'), {autoAlpha:0,y:-15,duration:.06}, .53);
+        timeline.to(q('.product-stage'), {scale:.68,duration:.07}, .58);
+        timeline.fromTo(q('.ingredient-intro'), {autoAlpha:0,y:12}, {autoAlpha:1,y:0,duration:.04}, .59);
+        timeline.fromTo(q('.ingredient'), {autoAlpha:0,y:14}, {autoAlpha:1,y:0,stagger:.015,duration:.035}, .61);
         timeline.to(q('.ingredient, .ingredient-intro'), {autoAlpha:0,y:-10,duration:.04}, .83);
-        timeline.to(q('.product-stage'), {scale:.66,yPercent:7,duration:.14}, .84);
-        timeline.fromTo(q('.finale-first'), {autoAlpha:0,xPercent:-18}, {autoAlpha:1,xPercent:0,duration:.12}, .86);
-        timeline.fromTo(q('.finale-second'), {autoAlpha:0,xPercent:18}, {autoAlpha:1,xPercent:0,duration:.12}, .88);
-        timeline.to(q('.finale-first'), {y:-15,duration:.08}, .92);
-        timeline.to(q('.finale-second'), {y:15,duration:.08}, .92);
-        timeline.to(q('.scene-scroll'), {autoAlpha:0,duration:.06}, .04);
+        timeline.to(q('.product-stage'), {scale:()=>window.innerWidth<=760?1:1.08,duration:.14}, .82);
+        timeline.fromTo(q('.story-closing'), {autoAlpha:0,y:16}, {autoAlpha:1,y:0,duration:.1}, .84);
         return () => {
           desiredTime = 0;
           media.pause();

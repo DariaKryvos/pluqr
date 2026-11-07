@@ -20,11 +20,16 @@ export function parseAddLines(body: unknown) {
   return list(object(body).lines).map(value => {
     const item = object(value);
     if (typeof item.merchandiseId !== 'string' || !/^gid:\/\/shopify\/ProductVariant\/\d+$/.test(item.merchandiseId)) throw invalid();
-    return {merchandiseId: item.merchandiseId, quantity: quantity(item.quantity, 1)};
+    if(item.variation!==undefined&&!(typeof item.variation==='string'&&['Naturel','Rozijnen','Mix van naturel & rozijnen'].includes(item.variation)))throw invalid();
+    return {merchandiseId:item.merchandiseId,quantity:quantity(item.quantity,1),...(item.variation?{attributes:[{key:'Variatie',value:item.variation as string}]}:{})};
   });
 }
 export function parseUpdateLines(body: unknown) {
-  return list(object(body).lines).map(value => { const item = object(value); return {id: lineId(item.id), quantity: quantity(item.quantity, 0)}; });
+  return list(object(body).lines).map(value => {
+    const item=object(value);
+    if(item.variation!==undefined&&!(typeof item.variation==='string'&&['Naturel','Rozijnen','Mix van naturel & rozijnen'].includes(item.variation)))throw invalid();
+    return {id:lineId(item.id),quantity:quantity(item.quantity,0),...(item.variation?{attributes:[{key:'Variatie',value:item.variation as string}]}:{})};
+  });
 }
 export function parseRemoveLines(body: unknown) { return list(object(body).lineIds).map(lineId); }
 export function parsePagination(url: URL) {

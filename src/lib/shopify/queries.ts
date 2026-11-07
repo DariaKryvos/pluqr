@@ -3,6 +3,7 @@ const VARIANT = `id title availableForSale selectedOptions { name value } price 
 const PRODUCT = `
   id handle title description availableForSale
   featuredImage { ${IMAGE} }
+  packCountMetafield:metafield(namespace:"custom",key:"pack_count") { value }
   options { name values }
   priceRange { minVariantPrice { amount currencyCode } maxVariantPrice { amount currencyCode } }
   variants(first: 100) { nodes { ${VARIANT} } pageInfo { hasNextPage endCursor } }
@@ -16,8 +17,8 @@ const CART = `
   id totalQuantity
   cost { subtotalAmount { amount currencyCode } totalAmount { amount currencyCode } subtotalAmountEstimated totalAmountEstimated }
   lines(first: 100) { nodes {
-    id quantity cost { totalAmount { amount currencyCode } }
-    merchandise { ... on ProductVariant { ${VARIANT} product { id title handle featuredImage { ${IMAGE} } } } }
+    id quantity attributes { key value } cost { totalAmount { amount currencyCode } }
+    merchandise { ... on ProductVariant { ${VARIANT} product { id title handle packCountMetafield:metafield(namespace:"custom",key:"pack_count") { value } featuredImage { ${IMAGE} } } } }
   } pageInfo { hasNextPage endCursor } }
 `;
 const RESULT = `cart { ${CART} } userErrors { code field message } warnings { code message target }`;
