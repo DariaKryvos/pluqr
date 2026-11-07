@@ -1,5 +1,6 @@
 'use client';
-import {useEffect,useState} from 'react';
+import {useEffect,useState,type MouseEvent} from 'react';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {ArrowRight,ShoppingBag} from 'lucide-react';
 export default function FloatingOrderButton(){
  const [overStory,setOverStory]=useState(true);
@@ -21,6 +22,20 @@ export default function FloatingOrderButton(){
   update();window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);
   return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);};
  },[]);
+ function jumpToProducts(event:MouseEvent<HTMLAnchorElement>){
+  const products=document.getElementById('producten');
+  if(!products)return;
+  event.preventDefault();
+  ScrollTrigger.refresh();
+  const align=()=>{
+   const header=document.querySelector('.opening-header')?.getBoundingClientRect().height||0;
+   window.scrollTo({top:products.getBoundingClientRect().top+window.scrollY-header,behavior:'instant'});
+   ScrollTrigger.update();
+   ScrollTrigger.getById('pluqr-story')?.getTween()?.progress(1);
+  };
+  align();requestAnimationFrame(align);
+  window.history.replaceState(null,'','#producten');
+ }
  if(productsVisible)return null;
- return <a className={`story-order-button floating-order-button${overStory?' is-over-story':''}`} href="#producten" lang="nl">Bestel nu <ShoppingBag size={21} aria-hidden="true"/><ArrowRight size={20} aria-hidden="true"/></a>;
+ return <a className={`story-order-button floating-order-button${overStory?' is-over-story':''}`} href="#producten" onClick={jumpToProducts} lang="nl">Bestel nu <ShoppingBag size={21} aria-hidden="true"/><ArrowRight size={20} aria-hidden="true"/></a>;
 }
