@@ -20,7 +20,7 @@ export default function ScrollExperience({videoSrc='/videos/pluqr-plate-to-open-
      <li><WheatOff size={20} strokeWidth={1.4} aria-hidden="true"/><span>Glutenvrij</span></li>
      <li><Croissant size={20} strokeWidth={1.4} aria-hidden="true"/><span>Vers gebakken</span></li>
    </ul>
-   <ProductVideo videoRef={video} src={videoSrc} poster="/videos/pluqr-plate-to-open-clean-poster.png" status={status}/>
+   <ProductVideo videoRef={video} src={videoSrc} sources={videoSrc==='/videos/pluqr-plate-to-open-clean.mp4'?[{src:'/videos/pluqr-plate-to-open-mobile.mp4',type:'video/mp4',media:'(max-width: 760px)'}]:undefined} poster="/videos/pluqr-plate-to-open-clean-poster.png" status={status}/>
    <div className="slice-copy"><p className="scene-eyebrow">Alle smaak. Voor iedereen.</p><h2><span>Volop</span><span>smaak.</span><span>Zonder</span><span>compromissen.</span></h2><span className="slice-line"/><p>Goudbruin van buiten. Heerlijk luchtig van binnen.</p></div>
    <IngredientCallouts/><FinaleTypography/>
  </section>;

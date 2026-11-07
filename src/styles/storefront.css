@@ -633,3 +633,5 @@ body{font-family:var(--control-font)}
 .site-footer .site-credit{padding-top:8px}
 .editorial-panel,.product-page,.about-page{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 @media(max-width:760px){.site-footer,.site-footer:has(.site-credit){padding:22px 18px 16px;gap:14px}.site-footer .site-credit{padding-top:4px}}
+
+.story-video-start{position:absolute;left:50%;top:60%;translate:-50% 0;z-index:12;display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border:1px solid #f8d995;border-radius:999px;background:#d8ad68;color:#10351b;font-size:14px;font-weight:600;box-shadow:0 4px 20px #0003}
