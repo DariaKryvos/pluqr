@@ -37,7 +37,7 @@ export default function CartProvider({children}:{children:ReactNode}) {
    if(!controller.signal.aborted&&version===mutationVersion.current)setError('Je winkelmand kon niet worden ververst. Probeer opnieuw.');
   }finally{if(readController.current===controller)readController.current=null;}
  }
- useLiveRefresh(()=>void refreshCart());
+ useLiveRefresh(()=>{if(cartOpen)void refreshCart();});
  useEffect(()=>()=>readController.current?.abort(),[]);
  useEffect(()=>{
   let cancelled=false;

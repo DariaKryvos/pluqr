@@ -6,7 +6,7 @@ import { productPath } from '../lib/seo/site';
 import { ShoppingBag, Check } from 'lucide-react';
 import { formatMoney } from '../lib/shopify/money';
 import type { ShopifyProduct } from '../lib/shopify/types';
-interface Props { product: ShopifyProduct; index: number; onSelect: (product: ShopifyProduct) => void }
+interface Props { product: ShopifyProduct }
 export default function ProductCard({product}:Props){
  const {add,busy,open}=useCart();
  const card=useRef<HTMLElement>(null);

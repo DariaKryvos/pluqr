@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
 import { absoluteUrl, allowIndexing, site } from '../lib/seo/site';
 import '../styles/globals.css';
 import '../styles/storefront.css';
+const inter=localFont({src:'./fonts/inter.woff2',variable:'--font-inter',weight:'400 700',display:'swap'});
+const cormorant=localFont({src:[{path:'./fonts/cormorant.woff2',weight:'400 600',style:'normal'},{path:'./fonts/cormorant-italic.woff2',weight:'400 500',style:'italic'}],variable:'--font-cormorant',display:'swap',preload:false});
 export const metadata: Metadata = {
   metadataBase:new URL(absoluteUrl()),
   title:{default:site.title,template:'%s | PLUQR'},description:site.description,
@@ -14,4 +17,4 @@ export const metadata: Metadata = {
   formatDetection:{telephone:false},
 };
 export const viewport: Viewport = {themeColor:'#153f20'};
-export default function RootLayout({children}:{children:ReactNode}) { return <html lang="nl"><body>{children}</body></html>; }
+export default function RootLayout({children}:{children:ReactNode}) { return <html lang="nl" className={`${inter.variable} ${cormorant.variable}`}><body>{children}</body></html>; }

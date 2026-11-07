@@ -11,8 +11,8 @@ import ProductShare from './ProductShare';
 import TrustpilotBadge from './TrustpilotBadge';
 import IngredientList from './IngredientList';
 import ProductCard from './ProductCard';
-interface Props { product: ShopifyProduct; related: ShopifyProduct[]; onSelect: (product: ShopifyProduct) => void; headingLevel?: 'h1'|'h2'; onAdded?: () => void; minimal?: boolean }
-export default function ProductDetails({product,related,onSelect,headingLevel='h2',onAdded,minimal=false}:Props){
+interface Props { product: ShopifyProduct; related: ShopifyProduct[]; headingLevel?: 'h1'|'h2'; onAdded?: () => void; minimal?: boolean }
+export default function ProductDetails({product,related,headingLevel='h2',onAdded,minimal=false}:Props){
  const Heading=headingLevel;
  const title=useRef<HTMLHeadingElement>(null);
  useEffect(()=>{title.current?.focus({preventScroll:true});},[]);
@@ -44,5 +44,5 @@ export default function ProductDetails({product,related,onSelect,headingLevel='h
   {!minimal&&<><div className="product-detail-description-block"><h3>Met liefde gemaakt</h3><p>Heerlijke oliebollen die bij jouw voorkeuren passen, met alle smaak die je kent.</p><ul><li>Vegan en glutenvrij</li><li>Vers gebakken</li><li>Vol van smaak</li></ul></div>
   <section className="product-detail-ingredients" aria-labelledby="detail-ingredients-title"><h3 id="detail-ingredients-title">Ingrediënten basisrecept</h3><IngredientList/>{product.title.toLowerCase().includes('rozijn')&&<p className="variant-ingredient-note">Dit is het basisrecept. De volledige ingrediëntenlijst voor de rozijnenvarianten volgt.</p>}</section></>}
  {minimal&&<Link className="quick-order-details-link" href={productPath(product.handle)} prefetch={false}>Bekijk productinformatie <ArrowUpRight size={13} aria-hidden="true"/></Link>}
- </div></div>{!minimal&&related.length>1&&<section className="related-products" aria-labelledby="related-title"><p className="scene-eyebrow">Nog meer om van te genieten</p><h3 id="related-title">Dit vind je misschien ook lekker.</h3><div className="shop-grid related-card-grid">{related.filter(item=>item.id!==product.id).map((item,index)=><ProductCard key={item.id} product={item} index={index} onSelect={onSelect}/>)}</div></section>}</>;
+ </div></div>{!minimal&&related.length>1&&<section className="related-products" aria-labelledby="related-title"><p className="scene-eyebrow">Nog meer om van te genieten</p><h3 id="related-title">Dit vind je misschien ook lekker.</h3><div className="shop-grid related-card-grid">{related.filter(item=>item.id!==product.id).map(item=><ProductCard key={item.id} product={item}/>)}</div></section>}</>;
 }

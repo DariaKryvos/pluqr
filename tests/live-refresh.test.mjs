@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { startLiveRefresh } from '../src/lib/shopify/live-refresh.ts';
 import { shopifyApi } from '../src/lib/shopify/browser.ts';
 
-test('refreshes every five seconds and on focus, pauses hidden tabs, and cleans up',()=>{
+test('refreshes every minute and on focus, pauses hidden tabs, and cleans up',()=>{
  const originalWindow=globalThis.window,originalDocument=globalThis.document;
  const window=new EventTarget(),document=new EventTarget();
  let timer,period,cleared=false,calls=0;
@@ -13,7 +13,7 @@ test('refreshes every five seconds and on focus, pauses hidden tabs, and cleans 
  globalThis.window=window;globalThis.document=document;
  try{
   const stop=startLiveRefresh(()=>calls++);
-  assert.equal(period,5000);
+  assert.equal(period,60000);
   timer();assert.equal(calls,1);
   document.visibilityState='hidden';timer();window.dispatchEvent(new Event('focus'));assert.equal(calls,1);
   document.visibilityState='visible';document.dispatchEvent(new Event('visibilitychange'));assert.equal(calls,2);
