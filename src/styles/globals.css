@@ -126,7 +126,7 @@ body{background:var(--green)}
 @media(max-width:760px){.cinematic-scene .scene-hero h1{font-size:clamp(56px,14vw,100px)}.cinematic-scene .slice-copy h2{font-size:clamp(30px,7.8vw,46px)}.cinematic-scene .finale p{font-size:clamp(34px,8vw,60px)}.cinematic-scene .ingredient-description{font-size:12px}}
 
 /* Carry the cards' rounded, quiet surfaces into the storytelling. */
-.cinematic-scene{--gold:#ffffff}
+.cinematic-scene{--gold:#ad986f}
 .cinematic-scene .scene-eyebrow{color:#ffffff;letter-spacing:.13em}
 .cinematic-scene .product-promises svg,.cinematic-scene .ingredient-name small,.cinematic-scene .finale em,.cinematic-scene .ingredient.is-selected button{color:#ffffff}
 .cinematic-scene .product-promises li{padding:12px 18px;border:1px solid #ffffff28;border-radius:999px;background:#ffffff08;font-size:13px;letter-spacing:0}
