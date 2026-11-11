@@ -31,10 +31,8 @@ export async function GET() {
 export async function POST(request: Request) {
   return apiResponse(async () => {
     const lines = parseAddLines(await readMutation(request));
-    let id = await cartId();
     // An expired Shopify cart is replaced only when adding a new selection.
-    if (id && !(await getCart(id))) id = null;
-    const result = await addCartLines(id, lines);
+    const result = await addCartLines(await cartId(), lines);
     return cartResponse(result.cart, result.warnings);
   });
 }

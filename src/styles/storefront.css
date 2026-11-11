@@ -565,9 +565,18 @@ body{font-family:var(--control-font)}
 /* Subtle depth within the green story background. */
 .cinematic-scene{background:linear-gradient(180deg,#10351b 0%,#10351b 15%,#0c2c17 65%,#072212 100%)}
 
-.card-add-feedback{display:block;font-size:11px;line-height:1.5;color:#153f20;margin-top:8px}.card-add-feedback:empty{display:none}.pack-card-add:disabled{opacity:.45;cursor:wait}
+.pack-card-add:disabled{opacity:.45;cursor:wait}
 
-.card-view-cart{position:relative;z-index:3;border:0;background:none;padding:5px 0;color:#153f20;font-size:11px;text-decoration:underline;text-underline-offset:3px;text-align:left}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Feedback floats above the add button so the card never changes height. */
+.pack-card-purchase{position:relative}
+.card-add-feedback{position:absolute;z-index:4;right:0;bottom:calc(100% + 10px);display:flex;align-items:center;gap:10px;white-space:nowrap;padding:8px 8px 8px 14px;border-radius:999px;background:#153f20;color:#ffffff;font-size:12px;line-height:1.3;box-shadow:0 4px 14px #00000022;animation:card-feedback-in .2s ease-out}
+.card-add-feedback.is-error{background:#8a2a1f;padding-right:14px}
+@keyframes card-feedback-in{from{opacity:0;transform:translateY(4px)}}
+@media(prefers-reduced-motion:reduce){.card-add-feedback{animation:none}}
+
+.card-view-cart{border:0;border-radius:999px;background:#ad986f;color:#153f20;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer}
 
 .cart-flavour-choice{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:7px 0 10px;font-size:12px}.cart-flavour-choice select{max-width:100%;min-height:36px;border:1px solid #ad986f55;border-radius:8px;background:#ffffff;color:#153f20;padding:6px 24px 6px 9px;font:400 12px/1.5 var(--control-font)}
 
@@ -610,6 +619,6 @@ body{font-family:var(--control-font)}
 /* Approved brand palette: green #153f20 and gold #ad986f. */
 :root{--green:#153f20;--gold:#ad986f}
 .cinematic-scene{--gold:#ad986f}
-.floating-order-button,.floating-order-button.is-over-story,.floating-order-button:hover,.floating-order-button.is-over-story:hover{background:#ad986f;color:#153f20;border-color:#ffffff}
+.floating-order-button,.floating-order-button.is-over-story,.floating-order-button:hover,.floating-order-button.is-over-story:hover{background:#ad986f;color:#153f20;border-color:#ad986f}
 .cart-delivery-feedback-clear.is-warning,.cart-delivery-feedback.is-outside{color:#153f20;background:#ad986f20;border-color:#ad986f99}
 .cart-delivery-options input[aria-invalid=true]{border-color:#ad986f;background:#ffffff}

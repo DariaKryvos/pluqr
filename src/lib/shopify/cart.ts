@@ -19,6 +19,8 @@ export async function addCartLines(cartId: string | null, lines: {merchandiseId:
     return result(data.cartCreate);
   }
   const data = await storefrontQuery<{cartLinesAdd: CartMutationResult}>(CART_ADD, {cartId, lines});
+  // An expired cart comes back as null; replace it instead of paying for a lookup on every add.
+  if (!data.cartLinesAdd.cart) return addCartLines(null, lines);
   return result(data.cartLinesAdd);
 }
 export async function updateCartLines(cartId: string, lines: {id: string; quantity: number; attributes?: {key:string;value:string}[]}[]) {
