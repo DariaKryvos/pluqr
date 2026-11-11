@@ -19,11 +19,24 @@ export function useScrollVideo(root: RefObject<HTMLElement | null>, video: RefOb
     let activated=false;
     let refreshFrame=0;
     let refreshed=false;
-    const seek = () => {
-      if(!active||!duration||media.readyState<1||media.seeking)return;
+    let seekTimer=0;
+    const applySeek = () => {
       if(Math.abs(media.currentTime-desiredTime)>.025){try{media.currentTime=desiredTime;}catch{/* Retry when the first video frame is available. */}}
-
     };
+    // iOS can leave a seek pending forever without firing `seeked`; re-issue it so scrubbing never stalls.
+    const watchSeek = () => {
+      seekTimer=0;
+      if(!active||!media.seeking)return;
+      // currentTime already reports the pending target while seeking, so force the reissue.
+      try{media.currentTime=desiredTime;}catch{/* Keep retrying until the decoder responds. */}
+      seekTimer=window.setTimeout(watchSeek,300);
+    };
+    const seek = () => {
+      if(!active||!duration||media.readyState<1)return;
+      if(media.seeking){if(!seekTimer)seekTimer=window.setTimeout(watchSeek,300);return;}
+      applySeek();
+    };
+    const seeked = () => {clearTimeout(seekTimer);seekTimer=0;seek();};
     const initialize = () => {
       if(Number.isFinite(media.duration)&&media.duration>0)duration=Math.max(0,media.duration-.05);
       if(scope){desiredTime=progress*duration;seek();return;}
@@ -79,12 +92,12 @@ export function useScrollVideo(root: RefObject<HTMLElement | null>, video: RefOb
     media.addEventListener('canplay',ready);
     media.addEventListener('loadedmetadata', initialize);
     media.addEventListener('loadeddata', ready);
-    media.addEventListener('seeked', seek);
+    media.addEventListener('seeked', seeked);
     media.addEventListener('error', error);
     initialize();
     if (media.readyState >= 2) ready();
     return () => {
-      active=false;cancelAnimationFrame(refreshFrame);
+      active=false;cancelAnimationFrame(refreshFrame);clearTimeout(seekTimer);
       window.removeEventListener('touchstart',activate);
       window.removeEventListener('pointerdown',activate);
       window.removeEventListener('touchend',activate);
@@ -94,7 +107,7 @@ export function useScrollVideo(root: RefObject<HTMLElement | null>, video: RefOb
       scope?.revert();
       media.removeEventListener('loadedmetadata', initialize);
       media.removeEventListener('loadeddata', ready);
-      media.removeEventListener('seeked', seek);
+      media.removeEventListener('seeked', seeked);
       media.removeEventListener('error', error);
     };
   }, [root, video]);
