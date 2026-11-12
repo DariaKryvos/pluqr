@@ -12,23 +12,19 @@ export default function ProductCard({product}:Props){
  const card=useRef<HTMLElement>(null);
  const [added,setAdded]=useState(false);
  const [failed,setFailed]=useState(false);
- const [adding,setAdding]=useState(false);
  const reset=useRef<ReturnType<typeof setTimeout>|null>(null);
  useEffect(()=>()=>{if(reset.current)clearTimeout(reset.current);},[]);
  const variant=product.variants.nodes.find(item=>item.availableForSale);
  async function quickAdd(){
   if(!variant||busy)return;
-  setFailed(false);setAdding(true);
-  // Animate on tap so the add feels instant; the server reply only confirms or reports failure.
+  // Confirm on tap so the add feels instant; the server reply can only roll it back.
   const request=add(variant.id,1,variant.title==='Default Title'?'Naturel':undefined);
+  if(reset.current)clearTimeout(reset.current);
+  setFailed(false);setAdded(true);
   flyToCart();
   const success=await request;
-  setAdding(false);
-  if(reset.current)clearTimeout(reset.current);
-  if(!success){setFailed(true);reset.current=setTimeout(()=>setFailed(false),3500);return;}
-  setAdded(true);
-  if(reset.current)clearTimeout(reset.current);
-  reset.current=setTimeout(()=>setAdded(false),3500);
+  if(!success){setAdded(false);setFailed(true);}
+  reset.current=setTimeout(()=>{setAdded(false);setFailed(false);},3500);
  }
  function flyToCart(){
   const source=card.current?.querySelector('img');
@@ -47,6 +43,6 @@ export default function ProductCard({product}:Props){
  const varied=product.priceRange.minVariantPrice.amount!==product.priceRange.maxVariantPrice.amount;
  return <article ref={card} className={`shop-card golden-product-card${recommended?' is-recommended':''}`}>
   <Link className="shop-card-image" href={productPath(product.handle)} prefetch={false} aria-label={`Bekijk ${product.title}`}><img src={product.featuredImage?.url||'/videos/oliebol-slicing-poster.webp'} width={product.featuredImage?.width||1280} height={product.featuredImage?.height||720} alt={product.featuredImage?.altText||product.title} loading="lazy"/>{recommended&&<span className="pack-card-badge">Meest populair</span>}</Link>
-  <div className="shop-card-body"><div className="shop-card-title"><h3><Link className="shop-card-page-link" href={productPath(product.handle)} prefetch={false}>{product.title}</Link></h3></div>{count&&<p className="clean-pack-count">{count} stuks{variant?.title==='Default Title'?' · Naturel':''}</p>}<div className="pack-card-purchase"><div className="shop-card-price"><strong>{varied&&<small>Vanaf </small>}{formatMoney(product.priceRange.minVariantPrice)}</strong></div>{(added||failed)&&<span className={`card-add-feedback${failed?' is-error':''}`}>{failed?'Toevoegen mislukt. Probeer opnieuw.':<>In je winkelmand <button type="button" className="card-view-cart" onClick={open}>Bekijk →</button></>}</span>}<button className="pack-card-add" type="button" disabled={adding||!variant} aria-label={`Voeg ${product.title} toe aan je winkelmand${variant?.title==='Default Title'?' — Naturel':''}`} title="Direct in je winkelmand" onClick={()=>void quickAdd()}>{added?<Check size={18} aria-hidden="true"/>:<ShoppingBag size={18} strokeWidth={1.6} aria-hidden="true"/>}</button></div><span className="sr-only" role="status" aria-live="polite">{failed?'Toevoegen mislukt. Probeer opnieuw.':added?`${product.title} in je winkelmand${variant?.title==='Default Title'?' · Naturel':''}`:''}</span></div>
+  <div className="shop-card-body"><div className="shop-card-title"><h3><Link className="shop-card-page-link" href={productPath(product.handle)} prefetch={false}>{product.title}</Link></h3></div>{count&&<p className="clean-pack-count">{count} stuks{variant?.title==='Default Title'?' · Naturel':''}</p>}<div className="pack-card-purchase"><div className="shop-card-price"><strong>{varied&&<small>Vanaf </small>}{formatMoney(product.priceRange.minVariantPrice)}</strong></div>{(added||failed)&&<span className={`card-add-feedback${failed?' is-error':''}`}>{failed?'Toevoegen mislukt. Probeer opnieuw.':<>In je winkelmand <button type="button" className="card-view-cart" onClick={open}>Bekijk →</button></>}</span>}<button className="pack-card-add" type="button" disabled={!variant} aria-label={`Voeg ${product.title} toe aan je winkelmand${variant?.title==='Default Title'?' — Naturel':''}`} title="Direct in je winkelmand" onClick={()=>void quickAdd()}>{added?<Check size={18} aria-hidden="true"/>:<ShoppingBag size={18} strokeWidth={1.6} aria-hidden="true"/>}</button></div><span className="sr-only" role="status" aria-live="polite">{failed?'Toevoegen mislukt. Probeer opnieuw.':added?`${product.title} in je winkelmand${variant?.title==='Default Title'?' · Naturel':''}`:''}</span></div>
  </article>;
 }

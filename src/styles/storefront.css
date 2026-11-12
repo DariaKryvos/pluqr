@@ -544,7 +544,10 @@ body{font-family:var(--control-font)}
 .cart-change-postcode{margin-top:10px;padding:4px 0;background:none;border:0;border-bottom:1px solid #ad986f;color:#153f20;font-size:12px}
 
 /* Cover subpixel seams while the header and pinned scene settle on reload. */
-.opening-header+main:has(>.cinematic-scene){background:#10351b}
+/* GSAP wraps the pinned story in .pin-spacer, so match at any depth. */
+.opening-header+main:has(.cinematic-scene){background:#10351b}
+/* When mobile browser bars collapse, the viewport outgrows the 100svh story; fill that gap with the story's bottom colour. */
+.pin-spacer:has(>.cinematic-scene){background:#072212}
 .opening-header::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#10351b;pointer-events:none}
 
 /* Give the delivery status a clear, compact highlight above navigation. */
@@ -565,20 +568,22 @@ body{font-family:var(--control-font)}
 /* Subtle depth within the green story background. */
 .cinematic-scene{background:linear-gradient(180deg,#10351b 0%,#10351b 15%,#0c2c17 65%,#072212 100%)}
 
-.pack-card-add:disabled{opacity:.45;cursor:wait}
+.pack-card-add:disabled{opacity:.45;cursor:not-allowed}
 
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* Feedback floats above the add button so the card never changes height. */
 .pack-card-purchase{position:relative}
-.card-add-feedback{position:absolute;z-index:4;right:0;bottom:calc(100% + 10px);display:flex;align-items:center;gap:10px;white-space:nowrap;padding:8px 8px 8px 14px;border-radius:999px;background:#153f20;color:#ffffff;font-size:12px;line-height:1.3;box-shadow:0 4px 14px #00000022;animation:card-feedback-in .2s ease-out}
-.card-add-feedback.is-error{background:#8a2a1f;padding-right:14px}
+.card-add-feedback{position:absolute;z-index:4;left:0;right:0;bottom:calc(100% + 10px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 10px;padding:9px 14px;border:1px solid #ad986f55;border-radius:12px;background:#fffdf8;color:#153f20;font-size:12px;font-weight:500;line-height:1.3;box-shadow:0 6px 18px #153f2014;animation:card-feedback-in .2s ease-out}
+.card-add-feedback.is-error{background:#fdf3f1;border-color:#c4554533;color:#8a2a1f}
+@media(max-width:760px){.card-add-feedback{justify-content:center;text-align:center;padding:7px 8px;font-size:11px;bottom:calc(100% + 6px)}}
 @keyframes card-feedback-in{from{opacity:0;transform:translateY(4px)}}
 @media(prefers-reduced-motion:reduce){.card-add-feedback{animation:none}}
 
-.card-view-cart{border:0;border-radius:999px;background:#ad986f;color:#153f20;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer}
+.card-view-cart{border:0;background:none;color:#8a7650;padding:2px 0;font-size:12px;font-weight:600;text-decoration:underline;text-decoration-color:#ad986f80;text-underline-offset:3px;cursor:pointer}
+.card-view-cart:hover{color:#153f20}
 
-.cart-flavour-choice{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:7px 0 10px;font-size:12px}.cart-flavour-choice select{max-width:100%;min-height:36px;border:1px solid #ad986f55;border-radius:8px;background:#ffffff;color:#153f20;padding:6px 24px 6px 9px;font:400 12px/1.5 var(--control-font)}
+.cart-flavour-choice{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:7px 0 10px;font-size:12px}.cart-flavour-choice select{max-width:100%;min-height:36px;border:1px solid #ad986f55;border-radius:8px;-webkit-appearance:none;appearance:none;background:#ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23153f20' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px;color:#153f20;padding:8px 36px 8px 14px;font:400 12px/1.5 var(--control-font);cursor:pointer}
 
 /* Product information stays on a readable beige surface. */
 .opening-header+main.product-page,.opening-header+main.about-page,.product-detail-dialog{background:linear-gradient(#ad986f20,#ad986f20),#ffffff;color:#153f20}
