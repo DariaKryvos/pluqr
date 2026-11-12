@@ -634,11 +634,12 @@ html{scroll-padding-top:calc(var(--site-header-height) + 16px)}
 
 .collection-heading{margin-bottom:24px}.collection-heading>h2{font:500 clamp(27px,3vw,38px)/1.15 var(--font-inter),Arial,sans-serif;letter-spacing:-.04em;color:var(--green)}
 
-/* Keep flavour choices together instead of stretching Mix onto a second row. */
-.variation-options{flex-wrap:nowrap;gap:6px}
-.variation-options label,.variation-options label:last-child{flex:0 0 auto;flex-basis:auto;justify-content:center;padding:10px 12px;white-space:nowrap}
-@media(max-width:480px){.variation-options{gap:5px}.variation-options label,.variation-options label:last-child{padding:10px 9px;font-size:10px}}
-@media(max-width:360px){.variation-options label,.variation-options label:last-child{padding:10px 7px;font-size:9px}}
+/* Flavour choices match the product card chips; wrap rather than squeeze on narrow screens. */
+.variation-options{flex-wrap:wrap;gap:8px}
+.variation-options label,.variation-options label:last-child{flex:0 0 auto;flex-basis:auto;justify-content:center;min-height:38px;padding:8px 20px;border:1px solid #ad986f55;background:#ffffff;color:#153f20;font:500 12px/1.2 var(--control-font);white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
+.variation-options label:not(:has(input:disabled)):hover{border-color:#ad986f}
+.variation-options label.is-active{background:#153f20;border-color:#153f20;color:#ffffff}
+@media(max-width:480px){.variation-options{gap:6px}.variation-options label,.variation-options label:last-child{min-height:36px;padding:7px 16px}}
 
 /* A considered, readable navigation panel with a brief brand introduction. */
 .cinema-nav #cinema-menu{top:calc(100% + 8px);left:5vw;right:auto;width:350px;max-width:calc(100vw - 40px);min-width:0;padding:25px 26px 22px;background:#ffffff;color:var(--green);border:1px solid #ad986f55;border-radius:22px;box-shadow:0 18px 50px #00000025}

@@ -7,6 +7,8 @@ import { ShoppingBag, Check } from 'lucide-react';
 import { formatMoney } from '../lib/shopify/money';
 import type { ShopifyProduct } from '../lib/shopify/types';
 interface Props { product: ShopifyProduct }
+// Short chip labels mapped to the variation values the cart already stores.
+const flavours=[{label:'Naturel',value:'Naturel'},{label:'Rozijnen',value:'Rozijnen'},{label:'Mix',value:'Mix van naturel & rozijnen'}];
 export default function ProductCard({product}:Props){
  const {add,busy,open}=useCart();
  const card=useRef<HTMLElement>(null);
@@ -14,11 +16,13 @@ export default function ProductCard({product}:Props){
  const [failed,setFailed]=useState(false);
  const reset=useRef<ReturnType<typeof setTimeout>|null>(null);
  useEffect(()=>()=>{if(reset.current)clearTimeout(reset.current);},[]);
+ const [flavour,setFlavour]=useState(flavours[0]);
  const variant=product.variants.nodes.find(item=>item.availableForSale);
+ const choosable=variant?.title==='Default Title';
  async function quickAdd(){
   if(!variant||busy)return;
   // Confirm on tap so the add feels instant; the server reply can only roll it back.
-  const request=add(variant.id,1,variant.title==='Default Title'?'Naturel':undefined);
+  const request=add(variant.id,1,choosable?flavour.value:undefined);
   if(reset.current)clearTimeout(reset.current);
   setFailed(false);setAdded(true);
   flyToCart();
@@ -43,6 +47,6 @@ export default function ProductCard({product}:Props){
  const varied=product.priceRange.minVariantPrice.amount!==product.priceRange.maxVariantPrice.amount;
  return <article ref={card} className={`shop-card golden-product-card${recommended?' is-recommended':''}`}>
   <Link className="shop-card-image" href={productPath(product.handle)} prefetch={false} aria-label={`Bekijk ${product.title}`}><img src={product.featuredImage?.url||'/videos/oliebol-slicing-poster.webp'} width={product.featuredImage?.width||1280} height={product.featuredImage?.height||720} alt={product.featuredImage?.altText||product.title} loading="lazy"/>{recommended&&<span className="pack-card-badge">Meest populair</span>}</Link>
-  <div className="shop-card-body"><div className="shop-card-title"><h3><Link className="shop-card-page-link" href={productPath(product.handle)} prefetch={false}>{product.title}</Link></h3></div>{count&&<p className="clean-pack-count">{count} stuks{variant?.title==='Default Title'?' · Naturel':''}</p>}<div className="pack-card-purchase"><div className="shop-card-price"><strong>{varied&&<small>Vanaf </small>}{formatMoney(product.priceRange.minVariantPrice)}</strong></div>{(added||failed)&&<span className={`card-add-feedback${failed?' is-error':''}`}>{failed?'Toevoegen mislukt. Probeer opnieuw.':<>In je winkelmand <button type="button" className="card-view-cart" onClick={open}>Bekijk →</button></>}</span>}<button className="pack-card-add" type="button" disabled={!variant} aria-label={`Voeg ${product.title} toe aan je winkelmand${variant?.title==='Default Title'?' — Naturel':''}`} title="Direct in je winkelmand" onClick={()=>void quickAdd()}>{added?<Check size={18} aria-hidden="true"/>:<ShoppingBag size={18} strokeWidth={1.6} aria-hidden="true"/>}</button></div><span className="sr-only" role="status" aria-live="polite">{failed?'Toevoegen mislukt. Probeer opnieuw.':added?`${product.title} in je winkelmand${variant?.title==='Default Title'?' · Naturel':''}`:''}</span></div>
+  <div className="shop-card-body"><div className="shop-card-title"><h3><Link className="shop-card-page-link" href={productPath(product.handle)} prefetch={false}>{product.title}</Link></h3></div>{count&&<p className="clean-pack-count">{count} stuks</p>}{choosable&&<fieldset className="card-flavours"><legend className="sr-only">Smaak voor {product.title}</legend>{flavours.map(option=><label key={option.value} className={flavour===option?'is-active':''}><input type="radio" className="sr-only" name={`flavour-${product.handle}`} checked={flavour===option} onChange={()=>setFlavour(option)}/>{option.label}</label>)}</fieldset>}<div className="pack-card-purchase"><div className="shop-card-price"><strong>{varied&&<small>Vanaf </small>}{formatMoney(product.priceRange.minVariantPrice)}</strong></div>{(added||failed)&&<span className={`card-add-feedback${failed?' is-error':''}`}>{failed?'Toevoegen mislukt. Probeer opnieuw.':<>{choosable?`${flavour.label} in je winkelmand`:'In je winkelmand'} <button type="button" className="card-view-cart" onClick={open}>Bekijk →</button></>}</span>}<button className="pack-card-add" type="button" disabled={!variant} aria-label={`Voeg ${product.title} toe aan je winkelmand${choosable?` — ${flavour.label}`:''}`} title="Direct in je winkelmand" onClick={()=>void quickAdd()}>{added?<Check size={18} aria-hidden="true"/>:<ShoppingBag size={18} strokeWidth={1.6} aria-hidden="true"/>}</button></div><span className="sr-only" role="status" aria-live="polite">{failed?'Toevoegen mislukt. Probeer opnieuw.':added?`${product.title} in je winkelmand${choosable?` · ${flavour.label}`:''}`:''}</span></div>
  </article>;
 }

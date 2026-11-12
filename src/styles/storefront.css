@@ -583,6 +583,14 @@ body{font-family:var(--control-font)}
 .card-view-cart{border:0;background:none;color:#8a7650;padding:2px 0;font-size:12px;font-weight:600;text-decoration:underline;text-decoration-color:#ad986f80;text-underline-offset:3px;cursor:pointer}
 .card-view-cart:hover{color:#153f20}
 
+/* Flavour chips sit above the card's full-size link overlay. */
+.card-flavours{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:6px;margin:-6px 0 16px;padding:0;border:0;min-width:0}
+.card-flavours label{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:5px 12px;border:1px solid #ad986f55;border-radius:999px;background:#ffffff;color:#153f20;font:500 12px/1.2 var(--control-font);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.card-flavours label:hover{border-color:#ad986f}
+.card-flavours label.is-active{background:#153f20;border-color:#153f20;color:#ffffff}
+.card-flavours label:has(input:focus-visible){outline:2px solid #153f20;outline-offset:2px}
+@media(max-width:760px){.card-flavours{gap:4px;margin:-8px 0 12px}.card-flavours label{flex:1 1 auto;min-height:28px;padding:4px 7px;font-size:11px}}
+
 .cart-flavour-choice{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:7px 0 10px;font-size:12px}.cart-flavour-choice select{max-width:100%;min-height:36px;border:1px solid #ad986f55;border-radius:8px;-webkit-appearance:none;appearance:none;background:#ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23153f20' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px;color:#153f20;padding:8px 36px 8px 14px;font:400 12px/1.5 var(--control-font);cursor:pointer}
 
 /* Product information stays on a readable beige surface. */
